@@ -1,6 +1,6 @@
 // Copyright (c) 2019-2021 The Litecoin Cash Core developers
-// Copyright (c) 2022 The Avian Core developers
 // Copyright (c) 2022 Shafil Alam
+// Copyright (c) 2022-2025 The Avian Core developers
 // Distributed under the MIT/X11 software license, see the accompanying
 // file COPYING or http://www.opensource.org/licenses/mit-license.php.
 
@@ -38,7 +38,8 @@ typedef struct TortureNode TortureNode;
 typedef struct TortureGarden TortureGarden;
 
 // Graph of hash algos plus SPH contexts
-struct TortureGarden {
+struct TortureGarden
+{
     sph_blake512_context context_blake;
     sph_bmw512_context context_bmw;
     sph_cubehash512_context context_cubehash;
@@ -56,7 +57,8 @@ struct TortureGarden {
     sph_whirlpool_context context_whirlpool;
     sph_sha512_context context_sha2;
 
-    struct TortureNode {
+    struct TortureNode
+    {
         unsigned int algo;
         TortureNode *childLeft;
         TortureNode *childRight;
@@ -66,99 +68,100 @@ struct TortureGarden {
 #if defined(_MSC_VER)
 #define _ALIGN(x) __declspec(align(x))
 #else
-#define _ALIGN(x) __attribute__ ((aligned(x)))
+#define _ALIGN(x) __attribute__((aligned(x)))
 #endif
 
 // Get a 64-byte hash for given 64-byte input, using given TortureGarden contexts and given algo index
 void get_hash(void *output, const void *input, TortureGarden *garden, unsigned int algo)
-{    
-	unsigned char _ALIGN(64) hash[64];
+{
+    unsigned char _ALIGN(64) hash[64];
     memset(hash, 0, sizeof(hash)); // Doesn't affect Minotaur as all hash outputs are 64 bytes; required for MinotaurX due to yespower's 32 byte output.
 
-    switch (algo) {
-        case 0:
-            sph_blake512_init(&garden->context_blake);
-            sph_blake512(&garden->context_blake, input, 64);
-            sph_blake512_close(&garden->context_blake, hash);
-            break;
-        case 1:
-            sph_bmw512_init(&garden->context_bmw);
-            sph_bmw512(&garden->context_bmw, input, 64);
-            sph_bmw512_close(&garden->context_bmw, hash);        
-            break;
-        case 2:
-            sph_cubehash512_init(&garden->context_cubehash);
-            sph_cubehash512(&garden->context_cubehash, input, 64);
-            sph_cubehash512_close(&garden->context_cubehash, hash);          
-            break;
-        case 3:
-            sph_echo512_init(&garden->context_echo);
-            sph_echo512(&garden->context_echo, input, 64);
-            sph_echo512_close(&garden->context_echo, hash);          
-            break;
-        case 4:
-            sph_fugue512_init(&garden->context_fugue);
-            sph_fugue512(&garden->context_fugue, input, 64);
-            sph_fugue512_close(&garden->context_fugue, hash);          
-            break;
-        case 5:
-            sph_groestl512_init(&garden->context_groestl);
-            sph_groestl512(&garden->context_groestl, input, 64);
-            sph_groestl512_close(&garden->context_groestl, hash);          
-            break;
-        case 6:
-            sph_hamsi512_init(&garden->context_hamsi);
-            sph_hamsi512(&garden->context_hamsi, input, 64);
-            sph_hamsi512_close(&garden->context_hamsi, hash);          
-            break;
-        case 7:
-            sph_sha512_init(&garden->context_sha2);
-            sph_sha512(&garden->context_sha2, input, 64);
-            sph_sha512_close(&garden->context_sha2, hash);
-            break;
-        case 8:
-            sph_jh512_init(&garden->context_jh);
-            sph_jh512(&garden->context_jh, input, 64);
-            sph_jh512_close(&garden->context_jh, hash);          
-            break;
-        case 9:
-            sph_keccak512_init(&garden->context_keccak);
-            sph_keccak512(&garden->context_keccak, input, 64);
-            sph_keccak512_close(&garden->context_keccak, hash);
-            break;
-        case 10:
-            sph_luffa512_init(&garden->context_luffa);
-            sph_luffa512(&garden->context_luffa, input, 64);
-            sph_luffa512_close(&garden->context_luffa, hash);          
-            break;
-        case 11:
-            sph_shabal512_init(&garden->context_shabal);
-            sph_shabal512(&garden->context_shabal, input, 64);
-            sph_shabal512_close(&garden->context_shabal, hash);          
-            break;
-        case 12:
-            sph_shavite512_init(&garden->context_shavite);
-            sph_shavite512(&garden->context_shavite, input, 64);
-            sph_shavite512_close(&garden->context_shavite, hash);          
-            break;
-        case 13:
-            sph_simd512_init(&garden->context_simd);
-            sph_simd512(&garden->context_simd, input, 64);
-            sph_simd512_close(&garden->context_simd, hash);          
-            break;
-        case 14:
-            sph_skein512_init(&garden->context_skein);
-            sph_skein512(&garden->context_skein, input, 64);
-            sph_skein512_close(&garden->context_skein, hash);          
-            break;
-        case 15:
-            sph_whirlpool_init(&garden->context_whirlpool);
-            sph_whirlpool(&garden->context_whirlpool, input, 64);
-            sph_whirlpool_close(&garden->context_whirlpool, hash);
-            break;
-        // NB: The CPU-hard gate must be case MINOTAUR_ALGO_COUNT.
-        case 16:
-            yespower_tls(input, 64, &yespower_params, (yespower_binary_t*)hash);
+    switch (algo)
+    {
+    case 0:
+        sph_blake512_init(&garden->context_blake);
+        sph_blake512(&garden->context_blake, input, 64);
+        sph_blake512_close(&garden->context_blake, hash);
+        break;
+    case 1:
+        sph_bmw512_init(&garden->context_bmw);
+        sph_bmw512(&garden->context_bmw, input, 64);
+        sph_bmw512_close(&garden->context_bmw, hash);
+        break;
+    case 2:
+        sph_cubehash512_init(&garden->context_cubehash);
+        sph_cubehash512(&garden->context_cubehash, input, 64);
+        sph_cubehash512_close(&garden->context_cubehash, hash);
+        break;
+    case 3:
+        sph_echo512_init(&garden->context_echo);
+        sph_echo512(&garden->context_echo, input, 64);
+        sph_echo512_close(&garden->context_echo, hash);
+        break;
+    case 4:
+        sph_fugue512_init(&garden->context_fugue);
+        sph_fugue512(&garden->context_fugue, input, 64);
+        sph_fugue512_close(&garden->context_fugue, hash);
+        break;
+    case 5:
+        sph_groestl512_init(&garden->context_groestl);
+        sph_groestl512(&garden->context_groestl, input, 64);
+        sph_groestl512_close(&garden->context_groestl, hash);
+        break;
+    case 6:
+        sph_hamsi512_init(&garden->context_hamsi);
+        sph_hamsi512(&garden->context_hamsi, input, 64);
+        sph_hamsi512_close(&garden->context_hamsi, hash);
+        break;
+    case 7:
+        sph_sha512_init(&garden->context_sha2);
+        sph_sha512(&garden->context_sha2, input, 64);
+        sph_sha512_close(&garden->context_sha2, hash);
+        break;
+    case 8:
+        sph_jh512_init(&garden->context_jh);
+        sph_jh512(&garden->context_jh, input, 64);
+        sph_jh512_close(&garden->context_jh, hash);
+        break;
+    case 9:
+        sph_keccak512_init(&garden->context_keccak);
+        sph_keccak512(&garden->context_keccak, input, 64);
+        sph_keccak512_close(&garden->context_keccak, hash);
+        break;
+    case 10:
+        sph_luffa512_init(&garden->context_luffa);
+        sph_luffa512(&garden->context_luffa, input, 64);
+        sph_luffa512_close(&garden->context_luffa, hash);
+        break;
+    case 11:
+        sph_shabal512_init(&garden->context_shabal);
+        sph_shabal512(&garden->context_shabal, input, 64);
+        sph_shabal512_close(&garden->context_shabal, hash);
+        break;
+    case 12:
+        sph_shavite512_init(&garden->context_shavite);
+        sph_shavite512(&garden->context_shavite, input, 64);
+        sph_shavite512_close(&garden->context_shavite, hash);
+        break;
+    case 13:
+        sph_simd512_init(&garden->context_simd);
+        sph_simd512(&garden->context_simd, input, 64);
+        sph_simd512_close(&garden->context_simd, hash);
+        break;
+    case 14:
+        sph_skein512_init(&garden->context_skein);
+        sph_skein512(&garden->context_skein, input, 64);
+        sph_skein512_close(&garden->context_skein, hash);
+        break;
+    case 15:
+        sph_whirlpool_init(&garden->context_whirlpool);
+        sph_whirlpool(&garden->context_whirlpool, input, 64);
+        sph_whirlpool_close(&garden->context_whirlpool, hash);
+        break;
+    // NB: The CPU-hard gate must be case MINOTAUR_ALGO_COUNT.
+    case 16:
+        yespower_tls(input, 64, &yespower_params, (yespower_binary_t *)hash);
     }
 
     // Output the hash
@@ -172,10 +175,13 @@ void traverse_garden(TortureGarden *garden, void *hash, TortureNode *node)
     memset(partialHash, 0, sizeof(partialHash)); // Doesn't affect Minotaur as all hash outputs are 64 bytes; required for MinotaurX due to yespower's 32 byte output.
     get_hash(partialHash, hash, garden, node->algo);
 
-    if (partialHash[63] % 2 == 0) {                                     // Last byte of output hash is even
+    if (partialHash[63] % 2 == 0)
+    { // Last byte of output hash is even
         if (node->childLeft != NULL)
             traverse_garden(garden, partialHash, node->childLeft);
-    } else {                                                            // Last byte of output hash is odd
+    }
+    else
+    { // Last byte of output hash is odd
         if (node->childRight != NULL)
             traverse_garden(garden, partialHash, node->childRight);
     }
@@ -184,7 +190,7 @@ void traverse_garden(TortureGarden *garden, void *hash, TortureNode *node)
 }
 
 // Associate child nodes with a parent node
-inline void link_nodes(TortureNode *parent, TortureNode *childLeft, TortureNode *childRight) 
+inline void link_nodes(TortureNode *parent, TortureNode *childLeft, TortureNode *childRight)
 {
     parent->childLeft = childLeft;
     parent->childRight = childRight;
@@ -192,7 +198,7 @@ inline void link_nodes(TortureNode *parent, TortureNode *childLeft, TortureNode 
 
 // Produce a 32-byte hash from 80-byte input data
 void minotaurx_hash(const char *input, char *output)
-{    
+{
     // Create torture garden nodes. Note that both sides of 19 and 20 lead to 21, and 21 has no children (to make traversal complete).
     // The successful path through the garden visits 7 nodes.
     TortureGarden garden;
@@ -219,12 +225,12 @@ void minotaurx_hash(const char *input, char *output)
     link_nodes(&garden.nodes[20], &garden.nodes[21], &garden.nodes[21]);
     garden.nodes[21].childLeft = NULL;
     garden.nodes[21].childRight = NULL;
-        
+
     // Find initial sha512 hash
     unsigned char _ALIGN(64) hash[64];
-	sph_sha512_init(&garden.context_sha2);
-	sph_sha512(&garden.context_sha2, input, 80);
-	sph_sha512_close(&garden.context_sha2, hash);
+    sph_sha512_init(&garden.context_sha2);
+    sph_sha512(&garden.context_sha2, input, 80);
+    sph_sha512_close(&garden.context_sha2, hash);
 
     // Assign algos to torture garden nodes based on initial hash
     for (int i = 0; i < 22; i++)
@@ -236,6 +242,6 @@ void minotaurx_hash(const char *input, char *output)
     // Send the initial hash through the torture garden
     traverse_garden(&garden, hash, &garden.nodes[0]);
 
-	// Truncate the result to 32 bytes
+    // Truncate the result to 32 bytes
     memcpy(output, hash, 32);
 }

@@ -1,0 +1,4 @@
+include README.md
+include LICENSE
+recursive-include sha3 *.c *.h
+recursive-include yespower *.c *.h
