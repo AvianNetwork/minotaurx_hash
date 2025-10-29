@@ -40,7 +40,7 @@ minotaurx_hash_module = Extension(
 )
 
 setup(
-    name="minotaurx_hash",
+    name="avian_minotaurx_hash",
     version="1.1.0",
     description="MinotaurX proof-of-work hash function for blockchain mining",
     long_description=read_readme(),
